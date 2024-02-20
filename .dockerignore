@@ -1,0 +1,20 @@
+# Fichiers générés par Symfony/var
+# /var
+# !var/cache/
+# !var/cache/**
+# !var/logs/
+
+# Fichiers de configuration locaux
+.env
+.env.local
+
+# Fichiers d'installation
+/vendor
+/composer.phar
+
+
+.docker-compose.yaml
+
+# Dossiers de développement
+/node_modules
+/.git

@@ -1,0 +1,42 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: todo_and_co
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: example
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - 3307:3306
+  symfony:
+    image: composer2.2
+    depends_on:
+      - mysql
+    environment:
+      database_host: mysql
+      database_port: 3307
+      database_name: todo_and_co
+      database_user: root
+      database_password: example
+      secret: 346fefezd364554gfvrf5634FGGVRFdd
+    ports:
+      - "8090:80"
+    working_dir: "/var/www/html"
+    command: sh -c "composer install && apache2-foreground && vendor/bin/simple-phpunit"
+  phpmyadmin:
+    image: phpmyadmin
+    links:
+      - mysql
+    environment:
+      ServerName: mysql
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+volumes:
+  db_data: {}
