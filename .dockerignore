@@ -5,13 +5,12 @@
 # !var/logs/
 
 # Fichiers de configuration locaux
-.env
+#.env
 .env.local
 
 # Fichiers d'installation
 /vendor
 /composer.phar
-
 
 .docker-compose.yaml
 

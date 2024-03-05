@@ -25,7 +25,7 @@ services:
     ports:
       - "8090:80"
     working_dir: "/var/www/html"
-    command: sh -c "composer install && apache2-foreground && vendor/bin/simple-phpunit"
+    command: sh -c "composer install && composer update -W && apache2-foreground"
   phpmyadmin:
     image: phpmyadmin
     links:
