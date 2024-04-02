@@ -2,17 +2,15 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function index()
+    #[Route('/', name: 'homepage')]
+    public function index(): Response
     {
         if(!$this->getUser()){
             return new RedirectResponse('login');
