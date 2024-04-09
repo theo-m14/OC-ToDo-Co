@@ -55,5 +55,31 @@ class SecurityControllerTest extends WebTestCase
         $this->assertStringContainsString("Invalid credentials.", $crawler->filter('.alert.alert-danger')->text());
     }
 
-    //TODO INSCRIPTION
+    public function testCreateUser(){
+        $client = static::createClient();
+        
+        $crawler = $client->request('GET','/users/create');
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $token = $crawler->filter('#csrf')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form');
+        $form = $buttonCrawlerMode->form([
+            'email' => 'theo@test.fr',
+            'password' => 'pQqMw96K9@ewLAV',
+            "_csrf_token" => $token,
+        ]);
+
+
+        $client->submit($form);
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
 }
