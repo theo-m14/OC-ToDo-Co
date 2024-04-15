@@ -9,9 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'user_list')]
@@ -37,6 +39,8 @@ class UserController extends AbstractController
                 )
             );
 
+            $user->setRoles([$form->get('roles')->getData()]);
+
             $em->persist($user);
             $em->flush();
 
@@ -55,7 +59,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
