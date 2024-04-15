@@ -150,10 +150,10 @@ class SecurityControllerTest extends WebTestCase
 
         $buttonCrawlerMode = $crawler->filter('form');
         $form = $buttonCrawlerMode->form([
-            'user[username]' => 'theomich@live.fr',
+            'user[username]' => 'testEdit',
             'user[password][first]' => 'pQqMw96K9@ewLAV',
             "user[password][second]" => 'pQqMw96K9@ewLAV',
-            "user[email]" => 'ffff@live.Fr',
+            "user[email]" => 'test2@test.fr',
             "user[roles]" => 'ROLE_ADMIN',
             "user[_token]" => $token,
         ]);
