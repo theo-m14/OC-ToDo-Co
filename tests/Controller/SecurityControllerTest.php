@@ -81,5 +81,89 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('GET','/users/create');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $token = $crawler->filter('#user__token')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form');
+        $form = $buttonCrawlerMode->form([
+            'user[username]' => 'test',
+            'user[password][first]' => 'pQqMw96K9@ewLAV',
+            "user[password][second]" => 'pQqMw96K9@ewLAV',
+            "user[email]" => 'test2@test.fr',
+            "user[roles]" => 'ROLE_ADMIN',
+            "user[_token]" => $token,
+        ]);
+
+        $client->submit($form);
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertStringContainsString("L'utilisateur a bien été ajouté.", $crawler->filter('.alert.alert-success')->text());
+    }
+
+    public function testEditUser(){
+        $client = static::createClient();
+        
+        $crawler = $client->request('GET','/users');
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $token = $crawler->filter('#csrf')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form');
+        $form = $buttonCrawlerMode->form([
+            'email' => 'theo@test.fr',
+            'password' => 'pQqMw96K9@ewLAV',
+            "_csrf_token" => $token,
+        ]);
+
+
+        $client->submit($form);
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('GET','/users');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $link = $crawler->filter("tr")->eq(2)->filter('td a')->attr('href');
+
+        $crawler = $client->request('GET',$link);
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $token = $crawler->filter('#user__token')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form');
+        $form = $buttonCrawlerMode->form([
+            'user[username]' => 'theomich@live.fr',
+            'user[password][first]' => 'pQqMw96K9@ewLAV',
+            "user[password][second]" => 'pQqMw96K9@ewLAV',
+            "user[email]" => 'ffff@live.Fr',
+            "user[roles]" => 'ROLE_ADMIN',
+            "user[_token]" => $token,
+        ]);
+
+        $client->submit($form);
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 }

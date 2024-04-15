@@ -39,6 +39,8 @@ class UserController extends AbstractController
                 )
             );
 
+            $user->setRoles([$form->get('roles')->getData()]);
+
             $em->persist($user);
             $em->flush();
 
@@ -57,7 +59,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
