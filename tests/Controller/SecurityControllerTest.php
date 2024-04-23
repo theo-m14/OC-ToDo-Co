@@ -94,7 +94,7 @@ class SecurityControllerTest extends WebTestCase
             'user[password][first]' => 'pQqMw96K9@ewLAV',
             "user[password][second]" => 'pQqMw96K9@ewLAV',
             "user[email]" => 'test2@test.fr',
-            "user[roles]" => 'ROLE_ADMIN',
+            "user[roles]" => 'ROLE_USER',
             "user[_token]" => $token,
         ]);
 
@@ -140,7 +140,7 @@ class SecurityControllerTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $link = $crawler->filter("tr")->eq(2)->filter('td a')->attr('href');
+        $link = $crawler->filter("tr")->eq(3)->filter('td a')->attr('href');
 
         $crawler = $client->request('GET',$link);
 

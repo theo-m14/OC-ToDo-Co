@@ -21,8 +21,9 @@ class AppFixtures extends Fixture
 
         $user = new User();
         $user->setEmail('testuser2@test.fr');
-        $user->setUsername('test');
+        $user->setUsername('testUser');
         $user->setPassword(password_hash('pQqMw96K9@ewLAV', PASSWORD_DEFAULT));
+        $manager->persist($user);
         $manager->flush();
     }
 }

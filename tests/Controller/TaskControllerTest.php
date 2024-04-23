@@ -172,14 +172,10 @@ class TaskControllerTest extends WebTestCase
         $this->assertStringContainsString('a bien été marquée comme faite',$success);
     }
 
-    public function testDelete(){
+    public function testDeleteAnonymousTaskOnAdmin(){
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/tasks/create');
-
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-
-        $crawler = $client->followRedirect();
+        $crawler = $client->request('GET', '/login');
 
         $token = $crawler->filter('#csrf')->attr('value');
 
@@ -198,9 +194,114 @@ class TaskControllerTest extends WebTestCase
 
         $firstTask = $crawler->filter('div.thumbnail')->eq(0);
 
-        $formToggle = $firstTask->filter('form')->eq(1);
+        $formDelete = $firstTask->filter('form')->eq(1);
 
-        $client->submit($formToggle->form());
+        $client->submit($formDelete->form());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $success = $crawler->filter('div.alert-success')->text();
+
+        $this->assertStringContainsString('Superbe ! La tâche a bien été supprimée.',$success);
+    }
+
+    public function testDeleteAnonymousTaskOnUserRole(){
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/login');
+
+        $token = $crawler->filter('#csrf')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form')->eq(0);
+        $form = $buttonCrawlerMode->form([
+            'email' => 'testuser2@test.fr',
+            'password' => 'pQqMw96K9@ewLAV',
+            "_csrf_token" => $token,
+        ]);
+
+        $client->submit($form);
+
+        $crawler = $client->followRedirect();
+
+        $crawler = $client->request('GET', '/tasks');
+
+        $firstTask = $crawler->filter('div.thumbnail')->eq(0);
+
+        $formDelete = $firstTask->filter('form')->eq(1);
+
+        $client->submit($formDelete->form());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $error = $crawler->filter('div.alert-danger')->text();
+
+        $this->assertStringContainsString('Vous devez être propiétaire de la tâche pour la supprimer',$error);
+    }
+
+    function testDeleteNotOwnedTask(){
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/login');
+
+        $token = $crawler->filter('#csrf')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form')->eq(0);
+        $form = $buttonCrawlerMode->form([
+            'email' => 'testuser2@test.fr',
+            'password' => 'pQqMw96K9@ewLAV',
+            "_csrf_token" => $token,
+        ]);
+
+        $client->submit($form);
+
+        $crawler = $client->followRedirect();
+
+        $crawler = $client->request('GET', '/tasks');
+
+        $lastTask = $crawler->filter('div.thumbnail')->last();
+
+        $formDelete = $lastTask->filter('form')->eq(1);
+
+        $client->submit($formDelete->form());
+
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $error = $crawler->filter('div.alert-danger')->text();
+
+        $this->assertStringContainsString('Vous devez être propiétaire de la tâche pour la supprimer',$error);
+    }
+
+    function testDeleteOwnedTask(){
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/login');
+
+        $token = $crawler->filter('#csrf')->attr('value');
+
+        $buttonCrawlerMode = $crawler->filter('form')->eq(0);
+        $form = $buttonCrawlerMode->form([
+            'email' => 'theo@test.fr',
+            'password' => 'pQqMw96K9@ewLAV',
+            "_csrf_token" => $token,
+        ]);
+
+        $client->submit($form);
+
+        $crawler = $client->followRedirect();
+
+        $crawler = $client->request('GET', '/tasks');
+
+        $lastTask = $crawler->filter('div.thumbnail')->last();
+
+        $formDelete = $lastTask->filter('form')->eq(1);
+
+        $client->submit($formDelete->form());
 
         $crawler = $client->followRedirect();
 
