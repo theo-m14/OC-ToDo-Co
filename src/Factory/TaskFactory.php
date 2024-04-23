@@ -51,6 +51,7 @@ final class TaskFactory extends ModelFactory
             'createdAt' => self::faker()->dateTime(),
             'isDone' => self::faker()->boolean(),
             'title' => self::faker()->text(255),
+            'owner' => null
         ];
     }
 
