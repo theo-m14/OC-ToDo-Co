@@ -83,7 +83,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
-    public function deleteTask(Task $task,EntityManagerInterface $em)
+    public function deleteTask(Task $task,EntityManagerInterface $em): Response
     {
         /** @var User $user */
         $user = $this->getUser();
