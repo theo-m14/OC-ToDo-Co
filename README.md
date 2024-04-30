@@ -57,17 +57,23 @@ Pour commencer avec le projet suivez ces étapes:
     php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test
     ```
 
-8. Exécuter les fixtures afin de manipuler le site ( répéter la commande en spécifiant " --env=test " pour les tests 
+8. Exécuter les fixtures afin de manipuler le site
 
    ```bash
     php bin/console doctrine:fixtures:load
     ```
    
-9. L'application est disponible à l'adresse : 127.0.0.1:8090
+9. Répéter la commande en spécifiant " --env=test " pour les tests
 
-10. PhpMyAdmin est sur le port 8081
+    ```bash
+    php bin/console doctrine:fixtures:load --env=test
+    ```
+   
+10. L'application est disponible à l'adresse : 127.0.0.1:8090
 
-11. Pour exécuter les tests:
+11. PhpMyAdmin est sur le port 8081
+
+12. Pour exécuter les tests:
 
     ```bash
     vendor/bin/phpunit
