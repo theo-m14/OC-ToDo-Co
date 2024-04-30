@@ -23,7 +23,7 @@ services:
     ports:
       - "8090:80"
     working_dir: "/var/www/html"
-    command: sh -c "composer install && composer update -W && symfony console d:f:l --env=test --no-interaction && apache2-foreground"
+    command: sh -c "composer install && composer update -W && apache2-foreground"
   phpmyadmin:
     image: phpmyadmin
     links:

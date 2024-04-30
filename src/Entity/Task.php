@@ -26,6 +26,9 @@ class Task
     #[ORM\Column]
     private ?bool $isDone = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?User $owner = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -67,14 +70,26 @@ class Task
         return $this;
     }
 
-    public function isDone(): ?bool
+    public function getIsDone(): ?bool
     {
         return $this->isDone;
     }
 
-    public function toggle(bool $isDone): static
+    public function setIsDone(bool $isDone): static
     {
         $this->isDone = $isDone;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }
