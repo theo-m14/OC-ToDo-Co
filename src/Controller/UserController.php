@@ -16,13 +16,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
-    #[Route('/users', name: 'user_list')]
+    #[Route('/users', name: 'user_list',methods:['GET'])]
     public function list(UserRepository $userRepository) : Response
     {
         return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
     }
 
-    #[Route('/users/create', name: 'user_create')]
+    #[Route('/users/create', name: 'user_create',methods:['GET','POST'])]
     public function create(Request $request, EntityManagerInterface $em,UserPasswordHasherInterface $userPasswordHasher) : Response
     {
         $user = new User();
@@ -52,7 +52,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route('/user/{id}/edit', name: 'user_edit')]
+    #[Route('/user/{id}/edit', name: 'user_edit',methods:['GET','POST'])]
     public function edit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em) : Response
     {
         $form = $this->createForm(UserType::class, $user);
